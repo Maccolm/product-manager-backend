@@ -1,6 +1,6 @@
 import isTokenValid from '../../../middleware/isTokenValid.mjs'
 import CartDBService from '../models/cart/CartDBService.mjs'
-import ProductsDBService from '../models/product/productsDBService.mjs'
+import ProductsDBService from '../models/product/ProductsDBService.mjs'
 
 class CartController {
   // Метод для отримання всіх товарів
