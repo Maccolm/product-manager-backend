@@ -1,4 +1,4 @@
-import ProductsDBService from '../models/product/productsDBService.mjs'
+import ProductsDBService from '../models/product/ProductsDBService.mjs'
 import ProvidersDBService from '../models/provider/providersDBService.mjs'
 import { validationResult } from 'express-validator'
 import { ensureAdmin ,checkAdminWithJWTToken } from '../../../middleware/ensureAdmin.mjs'
