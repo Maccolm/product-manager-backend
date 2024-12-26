@@ -102,4 +102,4 @@ class CartController {
   }
 }
 
-export default CartController
+export default ProductController
