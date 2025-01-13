@@ -1,6 +1,4 @@
 import Cart from './Cart.mjs'
-import ProductsDBService from '../product/ProductsDBService.mjs'
-import mongoose from 'mongoose'
 import MongooseCRUDManager from '../MongooseCRUDManager.mjs'
 
 class CartDBService extends MongooseCRUDManager {
