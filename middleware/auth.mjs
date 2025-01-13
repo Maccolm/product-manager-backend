@@ -38,10 +38,13 @@ const auth = (app) => {
 			try {
 				// Парсинг токена та додавання користувача до запиту
 				const userData = parseBearer(req.headers.authorization, req.headers)
-				// const rqUser = await UsersDBService.getUserById(userData.id, ['type'])
-				// console.log('req.user =', rqUser);
 				
 			} catch (err) {
+				console.log(err)
+				
+		    // Якщо токен невірний або закінчився його термін дії, буде згенеровано помилку
+			if(err.name === 'TokenExpiredError')
+				return res.status(401).json({ message: 'Session expired, please log in again', error: err.name })	
 				// Якщо авторизація не вдалася, повертається статус 401
 				return res.status(401).json({ result: "Access Denied" })
 			}
@@ -69,26 +72,6 @@ const getPermissionsChecker = (model) => (requiredPermission) => {
 	  }
 	}
  }
- const authenticateToken = (req, res, next) => {
-	const authHeader = req.headers['authorization']
-	if (!authHeader)
-		return res.status(401).json({ message: 'No token provided' })
-
-	const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
-	if (!token) {
-		return res.status(401).json({ message: 'Invalid token format' })
-	}
-
-	try {
-		const decoded = jwt.verify(token, prepareSecret(req.headers))
-		req.user = decoded
-		next()
-	} catch (error) {
-		if (err.name === 'TokenExpiredError') {
-			return res.status(401).json({ message: 'Token expired' })
-		}
-		return res.status(403).json({ message: 'Invalid token' })
-	}
- }
+ 
 // Експорт функції auth як модуля за замовчуванням
-export { auth, getPermissionsChecker, authenticateToken }
+export { auth, getPermissionsChecker }

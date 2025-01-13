@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import config  from '../config/default.mjs'
 
 // Час дії токена
-const expiresIn = '1m'
+const expiresIn = '60m'
 
 // Секретний ключ для токена (повинен бути збережений у .env файлі)
 const tokenKey = config.tokenKey // Save in .env !!!
@@ -18,11 +18,8 @@ export function parseBearer(bearer, headers) {
     // Декодуємо токен з використанням підготовленого секрету
     const decoded = jwt.verify(token, prepareSecret(headers))
     return decoded // Повертаємо декодовані дані
-  } catch (err) {
-    // Якщо токен невірний або закінчився його термін дії, буде згенеровано помилку
-	if(err.name === 'TokenExpiredError')
-		return res.status(401).json({ message: 'Token expired' })	
-	return res.status(403).json({ message: 'Invalid token' })
+  } catch (err) {	
+		throw err
   }
 }
 

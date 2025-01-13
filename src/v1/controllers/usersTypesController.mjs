@@ -36,9 +36,13 @@ class TypeController {
   }
 
   static async register(req, res) {
+	console.log('register user type run')
+	
     try {
       const { title, pagesPermissions } = req.body
       const dataObj = { title, pagesPermissions }
+		console.log('req body====>', req.body)
+		
 
       if (req.params.id) {
         // Оновлюємо дані про користувача в базі даних

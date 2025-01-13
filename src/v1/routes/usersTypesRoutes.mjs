@@ -6,13 +6,13 @@ const router = express.Router()
 const permissionsChecker = getPermissionsChecker('usersTypes')
 
 router.get('/:id', usersTypesController.getById)
-router.get('/', permissionsChecker('read'), usersTypesController.getList)
+router.get('/', permissionsChecker('read'),  usersTypesController.getList)
 
 router.post(
   '/register/:id?',
-	getPermissionsChecker('update'),
+	permissionsChecker('update'), 
   usersTypesController.register
 )
-router.delete('/:id',getPermissionsChecker('delete'), usersTypesController.delete)
+router.delete('/:id', permissionsChecker('delete'), usersTypesController.delete)
 
 export default router

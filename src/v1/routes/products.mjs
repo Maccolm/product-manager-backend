@@ -3,7 +3,7 @@ import { Router } from 'express'
 import multer from 'multer'
 import FormValidator from '../../../validators/formValidator.mjs'
 import { checkSchema } from 'express-validator'
-import { getPermissionsChecker, authenticateToken } from '../../../middleware/auth.mjs'
+import { getPermissionsChecker } from '../../../middleware/auth.mjs'
 import FilterService from '../controllers/filtersController.mjs'
 
 const router = Router()
