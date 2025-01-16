@@ -1,7 +1,7 @@
 import { parseBearer } from "../utils/jwtHelpers.mjs"
 
 async function isTokenValid(req, res) {
-	const token = req.headers.authorization
+	const token = req.headers['authorization']
 
 	if (!token) {
 		return 'Token is not provided'

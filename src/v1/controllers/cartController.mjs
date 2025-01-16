@@ -1,15 +1,19 @@
 import isTokenValid from '../../../middleware/isTokenValid.mjs'
 import CartDBService from '../models/cart/CartDBService.mjs'
 import ProductsDBService from '../models/product/productsDBService.mjs'
+import { parseBearer } from '../../../utils/jwtHelpers.mjs'
 
 class CartController {
   // Метод для отримання всіх товарів
   static async getCartDetails(req, res) { 
+	const user = parseBearer(req.headers['authorization'], req.headers)
+	
     try {
-      if (!req.user) {
+      if (!user) {
         return res.status(403).json({ error: 'Access denied' })
       }
-      const userId = req.user.id // Отримання id користувача
+      const userId = user.id // Отримання id користувача
+		
 		const token = await isTokenValid(req)
 		//якщо токен не валідний поверртаємо помилку
 		if (!token){
@@ -18,12 +22,13 @@ class CartController {
 				message: 'Your session is expired, please log in again to continue' 
 			})
 		}
+		console.log('cartDetails starts')
       const cartDetails = await CartDBService.getCartDetails(userId)
 		console.log('cartDetails======>', cartDetails)
 
       res.status(200).json({
         data: cartDetails,
-        user: req.user,
+        user,
 		  isTokenValid
       })
     } catch (error) {
@@ -32,12 +37,13 @@ class CartController {
   }
   // -------------
   static async addProduct(req, res) {
-	
-    if (!req.user) {
+	const user = parseBearer(req.headers['authorization'], req.headers)
+
+    if (!user) {
       return res.status(403).json({ error: 'Access denied' })
     }
 
-    const userId = req.user.id // Отримання id користувача
+    const userId = user.id // Отримання id користувача
 
     try {
       const { productId } = req.body // Отримання id продукту
@@ -60,10 +66,12 @@ class CartController {
     }
   }
   static async updateProductAmount(req, res) {
-    if (!req.user) {
+	const user = parseBearer(req.headers['authorization'], req.headers)
+
+    if (!user) {
       return res.status(403).json({ error: 'Access denied' })
     }
-    const userId = req.user.id // Отримання id користувача
+    const userId = user.id // Отримання id користувача
     try {
       const { productId, amount } = req.body // Отримання id продукту та кількості з тіла запиту
       // Перевірка чи існує продукт const
@@ -87,10 +95,12 @@ class CartController {
 
   // Метод для видалення товару (доступний тільки для адміністратора)
   static async deleteProduct(req, res) {
-    if (!req.user) {
+	const user = parseBearer(req.headers['authorization'], req.headers)
+
+    if (!user) {
       return res.status(403).json({ error: 'Access denied' })
     }
-    const userId = req.user.id // Отримання id користувача
+    const userId = user.id // Отримання id користувача
 
     try {
       const productId = req.params.id
