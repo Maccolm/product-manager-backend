@@ -22,11 +22,9 @@ class UserController {
   }
 
   static async registerForm(req, res) {
-	console.log('change')
 	
     try {
       const id = req.params.id
-		console.log(id);
 		
       let user = null
       if (id) {
@@ -40,7 +38,6 @@ class UserController {
         errors: [],
         data: user,
         types,
-        user: req.user,
       })
     } catch (err) {
      return res.status(500).json({ error: err.message })
@@ -50,6 +47,8 @@ class UserController {
     // Якщо валідація пройшла успішно, виконуємо логіку реєстрації
     const errors = validationResult(req)
     const data = req.body
+	 console.log('datra====>',data)
+	 
     const types = await TypesDBService.getList()
 	
     if (!errors.isEmpty()) {
@@ -63,15 +62,13 @@ class UserController {
     }
 
     try {
-      const dataObj = req.body
-
       if (req.params.id) {
         // Оновлюємо дані про користувача в базі даних
-        await UsersDBService.update(req.params.id, dataObj)
+        await UsersDBService.update(req.params.id, data)
 		  
       } else {
         // Додаємо користувача в базу даних
-        await UsersDBService.create(dataObj)
+        await UsersDBService.create(data)
       }
 
      return res.status(200).json({
@@ -82,7 +79,6 @@ class UserController {
         errors: [{ msg: err.message }],
         data,
         types,
-        user: req.user,
       })
     }
   }

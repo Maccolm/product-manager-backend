@@ -168,9 +168,17 @@ class MongooseCRUDManager {
 	// Оновлення за id
 	async update(id, data) {
 	  try {
-		 return await this.model
-			.findByIdAndUpdate(id, data, { new: true, runValidators: true })
-			.exec()
+
+		  const user = await this.model.findById(id)
+			const oldPassword = user.password
+			const newPassword = data.password
+			if (oldPassword === newPassword) {
+				//Якщо паролі однакові, то видаляємо поле з форми, щоб воно не закодувало вже закодований пароль знову
+				delete data.password
+			}
+			// Оновлюємо всі інші поля користувача
+			Object.assign(user, data)
+		  return await user.save()
 	  } catch (error) {
 		 throw new Error('Error updating data: ' + error.message)
 	  }
